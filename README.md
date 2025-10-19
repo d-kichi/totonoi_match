@@ -93,3 +93,5 @@
 - デプロイ先：Render  
 - 使用予定Gem：Devise / Ransack / dotenv  
 - 外部API（予定）：Google Maps API
+
+---
