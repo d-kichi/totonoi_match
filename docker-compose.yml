@@ -11,7 +11,7 @@ services:
 
   web:
     build: .
-    command: bash -c "bundle install && rails s -b 0.0.0.0"
+    command: bash -c "bundle install && bundle exec rails db:create && rails s -b 0.0.0.0"
     volumes:
       - .:/app
     ports:
@@ -19,6 +19,7 @@ services:
     depends_on:
       - db
     environment:
+      RAILS_ENV: development
       DATABASE_URL: postgres://postgres:password@db:5432/postgres
 
 volumes:

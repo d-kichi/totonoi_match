@@ -36,7 +36,7 @@ gem "jbuilder"
 # gem "bcrypt", "~> 3.1.7"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem "tzinfo-data", platforms: %i[ windows jruby ]
+gem "tzinfo-data", platforms: %i[windows jruby]
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
@@ -46,7 +46,13 @@ gem "bootsnap", require: false
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
-  gem "debug", platforms: %i[ mri windows ]
+  gem "debug", platforms: %i[mri windows]
+  gem 'pry-rails'        # デバッグ用コンソール
+  gem 'dotenv-rails'     # 環境変数の管理
+  gem 'rubocop', require: false # コード規約チェック
+  gem 'rubocop-rails', require: false
+  gem 'better_errors' # エラーページの可視化
+  gem 'binding_of_caller' # better_errors とセット
 end
 
 group :development do
