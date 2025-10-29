@@ -1,0 +1,10 @@
+<h1>あなたのサウナタイプは…</h1>
+
+<% if @sauna_type %>
+  <h2><%= @sauna_type.name %></h2>
+  <p><%= @sauna_type.description %></p>
+<% else %>
+  <p>診断結果が見つかりませんでした。</p>
+<% end %>
+
+<%= link_to "もう一度診断する", new_diagnosis_path, class: "btn btn-secondary" %>

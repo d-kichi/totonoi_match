@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_10_28_022140) do
+ActiveRecord::Schema[7.1].define(version: 2025_10_29_073651) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -18,11 +18,11 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_28_022140) do
     t.text "content"
     t.integer "score"
     t.bigint "question_id", null: false
-    t.bigint "sauna_type_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "style_type"
+    t.string "value_type"
     t.index ["question_id"], name: "index_answers_on_question_id"
-    t.index ["sauna_type_id"], name: "index_answers_on_sauna_type_id"
   end
 
   create_table "diagnosis_answers", force: :cascade do |t|
@@ -61,7 +61,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_28_022140) do
   end
 
   add_foreign_key "answers", "questions"
-  add_foreign_key "answers", "sauna_types"
   add_foreign_key "diagnosis_answers", "answers"
   add_foreign_key "diagnosis_answers", "questions"
   add_foreign_key "diagnosis_answers", "results"
