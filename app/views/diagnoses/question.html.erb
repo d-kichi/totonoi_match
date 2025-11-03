@@ -1,12 +1,12 @@
-<h2><%= @question.content %></h2>
+<h2>Q<%= @step %>. <%= @question.content %></h2>
 
-<%= form_with url: answer_diagnosis_path(step: @step), method: :post do %>
+<%= form_with url: answer_diagnosis_path(id: params[:id]), method: :post do %>
   <% @question.answers.each do |answer| %>
     <div>
-      <%= radio_button_tag :answer_id, answer.id %>
+      <%= radio_button_tag :answer, answer.id, false, id: "answer_#{answer.id}" %>
       <%= label_tag "answer_#{answer.id}", answer.content %>
     </div>
   <% end %>
-
-  <%= submit_tag "次へ", class: "btn btn-primary mt-3" %>
+  <%= hidden_field_tag :step, @step %>
+  <%= submit_tag '次へ', class: 'btn btn-primary' %>
 <% end %>

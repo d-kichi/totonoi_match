@@ -6,8 +6,12 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   resources :diagnoses, only: [:new, :create] do
+    member do
+      get 'question/:step', to: 'diagnoses#question', as: :question
+      post 'answer', to: 'diagnoses#answer'
+    end
     collection do
-      get :result
+      get 'result', to: 'diagnoses#result'
     end
   end
 

@@ -126,3 +126,30 @@ end
 
 puts "✅ Questions & Answers created: #{Question.count} questions / #{Answer.count} answers"
 puts "🌱 Done!"
+
+# --- 以下を seeds.rb の末尾に追加してください ---
+
+puts "✅ Creating Result data..."
+
+results_data = [
+  { sauna_type_name: "サウナモンク", headline: "内なる静寂の求道者", body: "一人時間を大切にし、瞑想的にサウナを味わうタイプ。静けさと内省を通して心を整えることを好みます。", recommendation_note: "落ち着いた照明・無音系サウナがおすすめ。" },
+  { sauna_type_name: "リセットマスター", headline: "思考も体も再起動", body: "整理整頓が好きで、頭と体をリセットしたいときにサウナを活用するタイプ。効率的にととのうことを重視します。", recommendation_note: "温度安定・導線設計の良い施設を選ぶと◎" },
+  { sauna_type_name: "ヒートウォリアー", headline: "限界突破の挑戦者", body: "熱に挑み、自分の限界を試すタイプ。アツさの中にこそ快感を見出す本格派サウナーです。", recommendation_note: "ロウリュ・アウフグースに積極的に参加しよう。" },
+  { sauna_type_name: "ととのいアーティスト", headline: "感覚をデザインする人", body: "光・音・香りなどの空間演出に敏感で、五感でサウナを楽しむクリエイティブタイプです。", recommendation_note: "デザイン性の高い施設や香り付きサウナに惹かれる傾向。" },
+  { sauna_type_name: "スチームメイト", headline: "笑い合ってととのう仲間派", body: "仲間と会話しながらのサウナ時間に癒されるタイプ。楽しさとつながりを重視します。", recommendation_note: "グループサウナ・貸切利用が向いている。" },
+  { sauna_type_name: "ワークバランサー", headline: "整える集中の達人", body: "仕事帰りにサウナで頭をリセットし、翌日への切り替えを図るバランス型。整うことでパフォーマンスを上げます。", recommendation_note: "都市型サウナやコワーキング併設施設が◎" },
+  { sauna_type_name: "ロウリュファイター", headline: "熱波を愛する戦士", body: "熱波と仲間をこよなく愛するアツいサウナー。全身でサウナ文化を楽しみ尽くすタイプです。", recommendation_note: "イベントロウリュ・熱波師のいる施設に行くべし。" },
+  { sauna_type_name: "スチームクリエイター", headline: "発信するととのい伝道者", body: "SNSや言葉でサウナの魅力を広めるタイプ。感動を共有し、文化を発信するエネルギーに満ちています。", recommendation_note: "写真映えする施設・独自演出のある空間に惹かれる。" }
+]
+
+results_data.each do |data|
+  sauna_type = SaunaType.find_by(name: data[:sauna_type_name])
+  Result.create!(
+    sauna_type: sauna_type,
+    headline: data[:headline],
+    body: data[:body],
+    recommendation_note: data[:recommendation_note]
+  )
+end
+
+puts "🌿 Results created successfully!"
