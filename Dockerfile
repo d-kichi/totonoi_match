@@ -18,4 +18,4 @@ COPY . .
 ENV PATH="/usr/local/bundle/bin:${PATH}"
 
 # 起動時にアセットをプリコンパイルしてからサーバー起動
-ENTRYPOINT ["bash", "-c", "bundle exec rails assets:precompile && rails server -b 0.0.0.0"]
+ENTRYPOINT ["bash", "-c", "bundle exec rails db:migrate && bundle exec rails db:seed && bundle exec rails assets:precompile && rails server -b 0.0.0.0"]
