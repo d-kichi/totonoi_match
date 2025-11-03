@@ -10,22 +10,22 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <!-- ✅ ヘッダー -->
-    <header class="text-center py-3 border-bottom">
-      <%= link_to "ととのいmatch!!", root_path, class: "fw-bold text-dark text-decoration-none fs-4" %>
-      <nav class="mt-2">
-        <%= link_to '最初から診断', new_diagnosis_path, class: 'mx-2 text-decoration-none text-muted' %>
-      </nav>
-    </header>
+  <body class="bg-light">
+    <!-- ✅ ナビバー -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm fixed-top">
+      <div class="container">
+        <%= link_to "ととのいmatch!!", root_path, class: "navbar-brand fw-bold text-primary" %>
+        <%= link_to '最初から診断', new_diagnosis_path, class: 'btn btn-outline-primary ms-auto' %>
+      </div>
+    </nav>
 
     <!-- ✅ メイン -->
-    <main class="container py-4">
+    <main class="container py-5 mt-5">
       <%= yield %>
     </main>
 
     <!-- ✅ フッター -->
-    <footer class="text-center py-3 border-top text-muted small">
+    <footer class="text-center py-3 border-top text-muted small bg-white">
       © 2025 Totonoi Match | 心ととのう、最高のサウナ体験を。
     </footer>
   </body>
