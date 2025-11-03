@@ -2,6 +2,7 @@ class DiagnosesController < ApplicationController
   before_action :set_questions
 
   def new
+    session[:answers] = {}
     redirect_to question_diagnosis_path(id: 1, step: 1)
   end
 
@@ -28,9 +29,11 @@ class DiagnosesController < ApplicationController
   end
 
   def result
-    # 診断ロジック呼び出し
     service = DiagnosisService.new(session[:answers])
-    @result = service.call
+    result_data = service.call  # ここで返ってくるのは { sauna_type_id: 3 } のようなデータと想定
+  
+    # sauna_type_idをキーにResultを取得
+    @result = Result.find_by(sauna_type_id: result_data[:sauna_type_id])
   end
 
   private

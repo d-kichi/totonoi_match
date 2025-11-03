@@ -1,11 +1,10 @@
 <h2>あなたのサウナタイプは…</h2>
 
-<p><strong><%= @result[:type] %></strong></p>
-<p><%= @result[:headline] %></p>
-<p><%= @result[:body] %></p>
-<p><%= @result[:recommendation_note] %></p>
-
-<%= link_to 'トップに戻る', root_path, class: 'btn btn-outline-secondary' %>
+<p><strong><%= @result.sauna_type.name %></strong></p>
+<p><%= @result.headline %></p>
+<p><%= @result.body %></p>
+<p><%= @result.recommendation_note %></p>
+<%= link_to 'あなたのタイプ詳細を見る', result_path(@result.id), class: 'btn btn-primary mt-3' %>
 
 <hr>
 
