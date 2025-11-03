@@ -12,13 +12,24 @@ class DiagnosisService
     calculate_scores
     style = @style_score.max_by { |_, v| v }&.first
     value = @value_score.max_by { |_, v| v }&.first
-    sauna_type_name(style, value)
+
+    sauna_type_name = sauna_type_name(style, value)
+    sauna_type = SaunaType.find_by(name: sauna_type_name)
+    result = Result.find_by(sauna_type: sauna_type)
+
+    return {
+      type: sauna_type_name,
+      headline: result&.headline || "診断結果が見つかりません",
+      body: result&.body || "該当するタイプの詳細データがありません。",
+      recommendation_note: result&.recommendation_note || ""
+    }
   end
 
   private
 
   def calculate_scores
-    @answers.each do |answer|
+    @answers.each do |_, answer_id|
+      answer = Answer.find(answer_id)
       @style_score[answer.style_type] += 1 if STYLE_KEYS.include?(answer.style_type)
       @value_score[answer.value_type] += 1 if VALUE_KEYS.include?(answer.value_type)
     end
@@ -26,14 +37,14 @@ class DiagnosisService
 
   def sauna_type_name(style, value)
     case [style, value]
-    when ["solo", "relax"]       then "サウナモンク（Sauna Monk）"
-    when ["solo", "reset"]       then "リセットマスター（Reset Master）"
-    when ["solo", "challenge"]   then "ヒートウォリアー（Heat Warrior）"
-    when ["solo", "creative"]    then "ととのいアーティスト（Totonoi Artist）"
-    when ["social", "relax"]     then "スチームメイト（Steam Mate）"
-    when ["social", "reset"]     then "ワークバランサー（Work Balancer）"
-    when ["social", "challenge"] then "ロウリュファイター（Löyly Fighter）"
-    when ["social", "creative"]  then "スチームクリエイター（Steam Creator）"
+    when ["solo", "relax"]       then "サウナモンク"
+    when ["solo", "reset"]       then "リセットマスター"
+    when ["solo", "challenge"]   then "ヒートウォリアー"
+    when ["solo", "creative"]    then "ととのいアーティスト"
+    when ["social", "relax"]     then "スチームメイト"
+    when ["social", "reset"]     then "ワークバランサー"
+    when ["social", "challenge"] then "ロウリュファイター"
+    when ["social", "creative"]  then "スチームクリエイター"
     else
       "診断不能（データ不足）"
     end

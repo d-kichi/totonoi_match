@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>App</title>
+    <title>ととのいmatch!!</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -11,6 +11,22 @@
   </head>
 
   <body>
-    <%= yield %>
+    <!-- ✅ ヘッダー -->
+    <header class="text-center py-3 border-bottom">
+      <%= link_to "ととのいmatch!!", root_path, class: "fw-bold text-dark text-decoration-none fs-4" %>
+      <nav class="mt-2">
+        <%= link_to '最初から診断', new_diagnosis_path, class: 'mx-2 text-decoration-none text-muted' %>
+      </nav>
+    </header>
+
+    <!-- ✅ メイン -->
+    <main class="container py-4">
+      <%= yield %>
+    </main>
+
+    <!-- ✅ フッター -->
+    <footer class="text-center py-3 border-top text-muted small">
+      © 2025 Totonoi Match | 心ととのう、最高のサウナ体験を。
+    </footer>
   </body>
 </html>

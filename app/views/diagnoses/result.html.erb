@@ -1,10 +1,51 @@
-<h1>あなたのサウナタイプは…</h1>
+<h2>あなたのサウナタイプは…</h2>
 
-<% if @sauna_type %>
-  <h2><%= @sauna_type.name %></h2>
-  <p><%= @sauna_type.description %></p>
-<% else %>
-  <p>診断結果が見つかりませんでした。</p>
-<% end %>
+<p><strong><%= @result[:type] %></strong></p>
+<p><%= @result[:headline] %></p>
+<p><%= @result[:body] %></p>
+<p><%= @result[:recommendation_note] %></p>
 
-<%= link_to "もう一度診断する", new_diagnosis_path, class: "btn btn-secondary" %>
+<%= link_to 'トップに戻る', root_path, class: 'btn btn-outline-secondary' %>
+
+<hr>
+
+<div class="share-section mt-5">
+  <h3>診断結果をシェアしよう！</h3>
+
+  <!-- URLコピー機能 -->
+  <button id="copyButton" class="btn btn-outline-primary me-3">結果ページのURLをコピー</button>
+  <p id="copyMessage" style="display:none; color:green; margin-top:10px;">コピーしました！</p>
+
+  <!-- SNS共有ボタン -->
+  <div class="sns-share mt-4">
+    <a href="https://twitter.com/intent/tweet?text=あなたのサウナタイプは『<%= @result[:type] %>』！%0A#ととのいmatch%0A<%= request.original_url %>"
+       target="_blank"
+       class="btn btn-outline-info me-2">
+       X（Twitter）でシェア
+    </a>
+
+    <a href="https://social-plugins.line.me/lineit/share?url=<%= request.original_url %>"
+       target="_blank"
+       class="btn btn-success">
+       LINEで送る
+    </a>
+  </div>
+</div>
+
+<!-- URLコピー用スクリプト -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const copyButton = document.getElementById("copyButton");
+  const copyMessage = document.getElementById("copyMessage");
+
+  copyButton.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      copyMessage.style.display = "block";
+      setTimeout(() => copyMessage.style.display = "none", 2000);
+    } catch (err) {
+      alert("コピーに失敗しました");
+    }
+  });
+});
+</script>
