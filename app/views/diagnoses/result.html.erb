@@ -17,11 +17,11 @@
 
   <!-- SNS共有ボタン -->
   <div class="sns-share mt-4">
-    <a href="https://twitter.com/intent/tweet?text=あなたのサウナタイプは『<%= @result[:type] %>』！%0A#ととのいmatch%0A<%= request.original_url %>"
-       target="_blank"
-       class="btn btn-outline-info me-2">
-       X（Twitter）でシェア
-    </a>
+    <a href="https://twitter.com/intent/tweet?text=<%= CGI.escape("あなたのサウナタイプは『#{@result.sauna_type.name}』！\n#{@result.headline}\n#ととのいmatch") %>&url=<%= CGI.escape(request.original_url) %>"
+   target="_blank"
+   class="btn btn-outline-info me-2">
+   X（Twitter）でシェア
+</a>
 
     <a href="https://social-plugins.line.me/lineit/share?url=<%= request.original_url %>"
        target="_blank"

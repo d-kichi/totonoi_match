@@ -1,0 +1,9 @@
+// Bootstrapテーマカスタム
+$primary: #00a6a6;  // メインカラー（ととのい感のある青緑）
+$secondary: #6c757d;
+$light: #f8f9fa;
+$dark: #212529;
+$body-bg: #f5f7f8;  // 背景をやわらかいグレーに
+
+// Bootstrap本体
+@import "bootstrap";
