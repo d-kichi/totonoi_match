@@ -10,9 +10,35 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_10_29_073651) do
+ActiveRecord::Schema[7.1].define(version: 2025_11_03_065118) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "active_admin_comments", force: :cascade do |t|
+    t.string "namespace"
+    t.text "body"
+    t.string "resource_type"
+    t.bigint "resource_id"
+    t.string "author_type"
+    t.bigint "author_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_type", "author_id"], name: "index_active_admin_comments_on_author"
+    t.index ["namespace"], name: "index_active_admin_comments_on_namespace"
+    t.index ["resource_type", "resource_id"], name: "index_active_admin_comments_on_resource"
+  end
+
+  create_table "admin_users", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_admin_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true
+  end
 
   create_table "answers", force: :cascade do |t|
     t.text "content"
@@ -60,9 +86,27 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_29_073651) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "saunas", force: :cascade do |t|
+    t.string "name"
+    t.string "location"
+    t.float "latitude"
+    t.float "longitude"
+    t.integer "temperature"
+    t.integer "water_temp"
+    t.boolean "has_outdoor_bath"
+    t.time "open_time"
+    t.time "close_time"
+    t.text "description"
+    t.bigint "sauna_type_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["sauna_type_id"], name: "index_saunas_on_sauna_type_id"
+  end
+
   add_foreign_key "answers", "questions"
   add_foreign_key "diagnosis_answers", "answers"
   add_foreign_key "diagnosis_answers", "questions"
   add_foreign_key "diagnosis_answers", "results"
   add_foreign_key "results", "sauna_types"
+  add_foreign_key "saunas", "sauna_types"
 end

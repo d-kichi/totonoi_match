@@ -1,0 +1,28 @@
+<div class="result-container">
+  <h1><%= @result.sauna_type&.name || "サウナタイプ未設定" %> 🧖‍♂️</h1>
+  <h2><%= @result.headline %></h2>
+  <p><%= @result.body %></p>
+  <p><strong>おすすめポイント：</strong> <%= @result.recommendation_note %></p>
+
+  <hr>
+
+  <h3>あなたにおすすめのサウナ施設</h3>
+  <% if @saunas.present? %>
+    <% @saunas.each do |sauna| %>
+      <div class="sauna-card">
+        <h4><%= sauna.name %></h4>
+        <% if sauna.description.present? %>
+          <p><%= sauna.description %></p>
+        <% end %>
+        <% if sauna.location.present? %>
+          <p>場所：<%= sauna.location %></p>
+        <% end %>
+        <% if sauna.temperature.present? && sauna.water_temp.present? %>
+          <p>サウナ温度：<%= sauna.temperature %>℃ ／ 水風呂：<%= sauna.water_temp %>℃</p>
+        <% end %>
+      </div>
+    <% end %>
+  <% else %>
+    <p>おすすめサウナ情報が見つかりませんでした。</p>
+  <% end %>
+</div>

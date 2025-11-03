@@ -10,6 +10,8 @@ class DiagnosisService
 
   def call
     calculate_scores
+
+    # 最も多かったスタイルと価値観を抽出
     style = @style_score.max_by { |_, v| v }&.first
     value = @value_score.max_by { |_, v| v }&.first
 
@@ -17,21 +19,27 @@ class DiagnosisService
     sauna_type = SaunaType.find_by(name: sauna_type_name)
     result = Result.find_by(sauna_type: sauna_type)
 
-    return {
-      type: sauna_type_name,
-      headline: result&.headline || "診断結果が見つかりません",
-      body: result&.body || "該当するタイプの詳細データがありません。",
-      recommendation_note: result&.recommendation_note || ""
-    }
+    if result
+      result
+    else
+      Result.create!(
+        sauna_type: SaunaType.find_or_create_by!(name: "診断不能（データ不足）"),
+        headline: "診断結果が見つかりません",
+        body: "該当するタイプの詳細データがありません。",
+        recommendation_note: ""
+      )
+    end
   end
 
   private
 
   def calculate_scores
-    @answers.each do |_, answer_id|
+    @answers.each do |question_id, answer_id|
       answer = Answer.find(answer_id)
-      @style_score[answer.style_type] += 1 if STYLE_KEYS.include?(answer.style_type)
-      @value_score[answer.value_type] += 1 if VALUE_KEYS.include?(answer.value_type)
+
+      # style_type か value_type のどちらかが存在すれば、それぞれスコア加算
+      @style_score[answer.style_type] += answer.score if STYLE_KEYS.include?(answer.style_type)
+      @value_score[answer.value_type] += answer.score if VALUE_KEYS.include?(answer.value_type)
     end
   end
 

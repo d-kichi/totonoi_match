@@ -1,0 +1,27 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  location: MyString
+  latitude: 1.5
+  longitude: 1.5
+  temperature: 1
+  water_temp: 1
+  has_outdoor_bath: false
+  open_time: 2025-11-03 06:35:43
+  close_time: 2025-11-03 06:35:43
+  description: MyText
+  sauna_type: one
+
+two:
+  name: MyString
+  location: MyString
+  latitude: 1.5
+  longitude: 1.5
+  temperature: 1
+  water_temp: 1
+  has_outdoor_bath: false
+  open_time: 2025-11-03 06:35:43
+  close_time: 2025-11-03 06:35:43
+  description: MyText
+  sauna_type: two

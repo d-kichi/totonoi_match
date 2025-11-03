@@ -3,6 +3,8 @@ puts "🌿 Seeding start..."
 # --- 初期化 ---
 Answer.destroy_all
 Question.destroy_all
+Result.destroy_all
+Sauna.destroy_all
 SaunaType.destroy_all
 
 # --- サウナタイプ（8タイプ） ---
@@ -152,4 +154,61 @@ results_data.each do |data|
   )
 end
 
+puts "🔥 Creating Sauna data..."
+
+saunas_data = [
+  { name: "サウナ東京", location: "東京都港区赤坂", temperature: 90, water_temp: 16, has_outdoor_bath: true,
+    open_time: "06:00", close_time: "23:00", description: "静けさと照明のバランスが極上。瞑想的な空間で内省できる。",
+    sauna_type_name: "サウナモンク" },
+
+  { name: "タイムズ スパ・レスタ", location: "東京都豊島区東池袋", temperature: 92, water_temp: 15, has_outdoor_bath: true,
+    open_time: "11:30", close_time: "08:30", description: "都会のリセット空間。清潔で動線が整っており、整いやすい環境。",
+    sauna_type_name: "リセットマスター" },
+
+  { name: "渋谷SAUNAS", location: "東京都渋谷区桜丘町", temperature: 100, water_temp: 10, has_outdoor_bath: false,
+    open_time: "07:00", close_time: "23:00", description: "多様なサウナ室で限界突破。熱と冷のギャップを楽しむ挑戦型。",
+    sauna_type_name: "ヒートウォリアー" },
+
+  { name: "黄金湯", location: "東京都墨田区太平", temperature: 94, water_temp: 14, has_outdoor_bath: true,
+    open_time: "06:00", close_time: "24:30", description: "アート・音楽・銭湯が融合。感性でととのう非日常空間。",
+    sauna_type_name: "ととのいアーティスト" },
+
+  { name: "SAUNA & co", location: "東京都台東区蔵前", temperature: 88, water_temp: 17, has_outdoor_bath: false,
+    open_time: "10:00", close_time: "23:00", description: "ナチュラルデザイン×会話空間。共感と癒しのソーシャルサウナ。",
+    sauna_type_name: "スチームメイト" },
+
+  { name: "サウナ&カプセル北欧", location: "東京都台東区上野", temperature: 98, water_temp: 13, has_outdoor_bath: false,
+    open_time: "24時間営業", close_time: nil, description: "大衆サウナの王道。仲間と“整う”体験を共有できる。",
+    sauna_type_name: "ワークバランサー" },
+
+  { name: "HUBHUB御徒町", location: "東京都台東区上野", temperature: 102, water_temp: 11, has_outdoor_bath: false,
+    open_time: "10:00", close_time: "24:00", description: "貸切×高温×盛り上がる空気。仲間で挑戦するグループ向け。",
+    sauna_type_name: "ロウリュファイター" },
+
+  { name: "KUDOCHI sauna", location: "東京都中央区銀座", temperature: 90, water_temp: 15, has_outdoor_bath: false,
+    open_time: "09:00", close_time: "23:00", description: "デザイン美×創造性。仲間と感性を共有する空間。",
+    sauna_type_name: "スチームクリエイター" }
+]
+
+saunas_data.each do |data|
+  sauna_type = SaunaType.find_by(name: data[:sauna_type_name])
+  Sauna.create!(
+    name: data[:name],
+    location: data[:location],
+    temperature: data[:temperature],
+    water_temp: data[:water_temp],
+    has_outdoor_bath: data[:has_outdoor_bath],
+    open_time: data[:open_time],
+    close_time: data[:close_time],
+    description: data[:description],
+    sauna_type: sauna_type
+  )
+end
+
+puts "✅ Saunas created successfully!"
+
 puts "🌿 Results created successfully!"
+AdminUser.find_or_create_by!(email: 'admin@example.com') do |user|
+  user.password = 'password'
+  user.password_confirmation = 'password'
+end

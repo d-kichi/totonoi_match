@@ -1,10 +1,12 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  # ActiveAdmin
+  devise_for :admin_users, ActiveAdmin::Devise.config
+  ActiveAdmin.routes(self)
 
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
-  get "up" => "rails/health#show", as: :rails_health_check
+  # 既存のルーティングの下に追加
+  resources :results, only: [:show]
 
+  # 診断系
   resources :diagnoses, only: [:new, :create] do
     member do
       get 'question/:step', to: 'diagnoses#question', as: :question
@@ -15,5 +17,9 @@ Rails.application.routes.draw do
     end
   end
 
+  # 健康チェック
+  get "up" => "rails/health#show", as: :rails_health_check
+
+  # トップページ
   root "homes#index"
 end
