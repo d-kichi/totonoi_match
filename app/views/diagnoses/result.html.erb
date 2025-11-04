@@ -33,9 +33,13 @@
 
 <!-- URLコピー用スクリプト -->
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("turbo:load", initCopyButton);
+document.addEventListener("DOMContentLoaded", initCopyButton);
+
+function initCopyButton() {
   const copyButton = document.getElementById("copyButton");
   const copyMessage = document.getElementById("copyMessage");
+  if (!copyButton) return;
 
   copyButton.addEventListener("click", async () => {
     try {
@@ -46,5 +50,5 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("コピーに失敗しました");
     }
   });
-});
+}
 </script>

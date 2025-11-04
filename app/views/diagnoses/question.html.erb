@@ -1,6 +1,6 @@
 <h2>Q<%= @step %>. <%= @question.content %></h2>
 
-<%= form_with url: answer_diagnosis_path(id: params[:id]), method: :post do %>
+<%= form_with url: answer_diagnosis_path(id: params[:id]), method: :post, local: true, html: { id: "question-form" } do %>
   <% @question.answers.each do |answer| %>
     <div>
       <%= radio_button_tag :answer, answer.id, false, id: "answer_#{answer.id}" %>
@@ -10,3 +10,14 @@
   <%= hidden_field_tag :step, @step %>
   <%= submit_tag '次へ', class: 'btn btn-primary' %>
 <% end %>
+
+<script>
+  document.getElementById("question-form").addEventListener("submit", function(event) {
+    const radios = document.querySelectorAll("input[type='radio'][name='answer']");
+    const checked = Array.from(radios).some(r => r.checked);
+    if (!checked) {
+      alert("少なくとも1つ選択してください！");
+      event.preventDefault(); // 送信を止める
+    }
+  });
+</script>
