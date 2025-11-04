@@ -34,6 +34,7 @@ class DiagnosisService
   private
 
   def calculate_scores
+    return [] if answers.nil?
     @answers.each do |question_id, answer_id|
       answer = Answer.find(answer_id)
 
