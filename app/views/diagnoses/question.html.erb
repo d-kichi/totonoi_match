@@ -3,12 +3,42 @@
 <%= form_with url: answer_diagnosis_path(id: params[:id]), method: :post, local: true, html: { id: "question-form" } do %>
   <% @question.answers.each do |answer| %>
     <div>
-      <%= radio_button_tag :answer, answer.id, false, id: "answer_#{answer.id}" %>
+      <%= radio_button_tag :answer, answer.id, session[:answers][@step.to_s] == answer.id.to_s, id: "answer_#{answer.id}" %>
       <%= label_tag "answer_#{answer.id}", answer.content %>
     </div>
   <% end %>
+
+  <% total_questions = @questions.size %>
+<div class="progress my-3" style="height: 25px;">
+  <div 
+    class="progress-bar progress-bar-striped"
+    role="progressbar"
+    style="
+      width: <%= (@step.to_f / total_questions * 100).round %>%;
+      background-color: #00a6a6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    "
+    aria-valuenow="<%= @step %>"
+    aria-valuemin="0"
+    aria-valuemax="<%= total_questions %>">
+    <%= @step %>/<%= total_questions %>
+  </div>
+</div>
+
   <%= hidden_field_tag :step, @step %>
-  <%= submit_tag '次へ', class: 'btn btn-primary' %>
+
+  <div class="d-flex justify-content-center gap-3 mt-3">
+    <% if @step > 1 %>
+      <%= link_to "前へ戻る", question_diagnosis_path(id: params[:id], step: @step - 1), class: "btn btn-outline-secondary" %>
+    <% else %>
+      <div></div> <!-- ボタン位置合わせ用 -->
+    <% end %>
+
+    <%= submit_tag '次へ', class: 'btn btn-primary' %>
+  </div>
 <% end %>
 
 <script>
@@ -17,7 +47,7 @@
     const checked = Array.from(radios).some(r => r.checked);
     if (!checked) {
       alert("少なくとも1つ選択してください！");
-      event.preventDefault(); // 送信を止める
+      event.preventDefault();
     }
   });
 </script>

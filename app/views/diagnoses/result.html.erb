@@ -1,27 +1,31 @@
 <h2>あなたのサウナタイプは…</h2>
 
-<p><strong><%= @result.sauna_type.name %></strong></p>
-<p><%= @result.headline %></p>
-<p><%= @result.body %></p>
-<p><%= @result.recommendation_note %></p>
-<%= link_to 'あなたのタイプ詳細を見る', result_path(@result.id), class: 'btn btn-primary mt-3' %>
+<div class="card my-4 p-4 shadow-sm">
+  <h3 class="text-center mb-3 text-primary"><%= @result.sauna_type.name %>🧖‍♂️</h3>
+  <p class="lead text-center"><%= @result.headline %></p>
+  <hr>
+  <p><%= simple_format(@result.body) %></p>
+  <p class="mt-3"><strong><%= @result.recommendation_note %></strong></p>
+</div>
 
-<hr>
+<div class="text-center">
+  <%= link_to 'おすすめサウナを見る', result_path(@result.id), class: 'btn btn-primary mt-3 px-4' %>
+</div>
 
-<div class="share-section mt-5">
+<hr class="my-5">
+
+<div class="share-section text-center">
   <h3>診断結果をシェアしよう！</h3>
 
-  <!-- URLコピー機能 -->
   <button id="copyButton" class="btn btn-outline-primary me-3">結果ページのURLをコピー</button>
   <p id="copyMessage" style="display:none; color:green; margin-top:10px;">コピーしました！</p>
 
-  <!-- SNS共有ボタン -->
   <div class="sns-share mt-4">
     <a href="https://twitter.com/intent/tweet?text=<%= CGI.escape("あなたのサウナタイプは『#{@result.sauna_type.name}』！\n#{@result.headline}\n#ととのいmatch") %>&url=<%= CGI.escape(request.original_url) %>"
-   target="_blank"
-   class="btn btn-outline-info me-2">
-   X（Twitter）でシェア
-</a>
+       target="_blank"
+       class="btn btn-outline-info me-2">
+       X（Twitter）でシェア
+    </a>
 
     <a href="https://social-plugins.line.me/lineit/share?url=<%= request.original_url %>"
        target="_blank"
@@ -31,16 +35,13 @@
   </div>
 </div>
 
-<!-- URLコピー用スクリプト -->
 <script>
 document.addEventListener("turbo:load", initCopyButton);
 document.addEventListener("DOMContentLoaded", initCopyButton);
-
 function initCopyButton() {
   const copyButton = document.getElementById("copyButton");
   const copyMessage = document.getElementById("copyMessage");
   if (!copyButton) return;
-
   copyButton.addEventListener("click", async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
