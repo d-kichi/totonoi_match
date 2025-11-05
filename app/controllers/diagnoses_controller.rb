@@ -36,6 +36,11 @@ class DiagnosesController < ApplicationController
     @result = Result.find_by(sauna_type_id: result_data[:sauna_type_id])
   end
 
+  def reset
+    session[:answers] = {}  # 診断回答データをリセット
+    redirect_to root_path, notice: '診断データをリセットしました'
+  end
+  
   private
 
   def set_questions

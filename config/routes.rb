@@ -22,4 +22,8 @@ Rails.application.routes.draw do
 
   # トップページ
   root "homes#index"
+
+  # 診断データをリセットしてトップページに戻る
+get 'reset_diagnosis', to: 'diagnoses#reset', as: :reset_diagnosis
+
 end
