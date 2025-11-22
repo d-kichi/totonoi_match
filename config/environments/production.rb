@@ -98,6 +98,7 @@ Rails.application.configure do
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
   config.hosts << "totonoi-match.onrender.com"
 
+
   config.action_mailer.default_url_options = { host: "https://totonoi-match.onrender.com" }
 config.action_mailer.delivery_method = :smtp
 config.action_mailer.smtp_settings = {
