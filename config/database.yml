@@ -1,16 +1,19 @@
 default: &default
   adapter: postgresql
   encoding: unicode
+  host: db
+  username: postgres
+  password: password
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
 development:
   <<: *default
-  url: <%= ENV["LOCAL_DATABASE_URL"] %>
+  database: totonoi_match_development
 
 test:
   <<: *default
-  url: <%= ENV["LOCAL_DATABASE_URL"] %>
+  database: totonoi_match_test
 
 production:
   <<: *default
-  url: <%= ENV["DATABASE_URL"] || ENV["LOCAL_DATABASE_URL"] %>
+  url: <%= ENV["DATABASE_URL"] %> 

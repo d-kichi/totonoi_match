@@ -20,10 +20,21 @@ Rails.application.routes.draw do
   # 健康チェック
   get "up" => "rails/health#show", as: :rails_health_check
 
+  # お問い合わせフォーム
+  resources :contacts, only: [:new, :create] do
+    get :thanks, on: :collection
+  end
+
   # トップページ
   root "homes#index"
 
   # 診断データをリセットしてトップページに戻る
 get 'reset_diagnosis', to: 'diagnoses#reset', as: :reset_diagnosis
+
+get 'terms', to: 'pages#terms'
+get 'privacy', to: 'pages#privacy'
+  if Rails.env.development?
+    mount LetterOpenerWeb::Engine, at: "/letter_opener"
+  end
 
 end
