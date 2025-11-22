@@ -18,7 +18,11 @@
         <%= link_to '最初から診断', new_diagnosis_path, class: 'btn btn-outline-primary ms-auto' %>
       </div>
     </nav>
-
+<% if notice %>
+  <div class="alert alert-success text-center"><%= notice %></div>
+<% elsif alert %>
+  <div class="alert alert-danger text-center"><%= alert %></div>
+<% end %>
     <!-- ✅ メイン -->
     <main class="container py-5 mt-5">
       <%= yield %>
@@ -26,7 +30,10 @@
 
     <!-- ✅ フッター -->
     <footer class="text-center py-3 border-top text-muted small bg-white">
-      © 2025 Totonoi Match | 心ととのう、最高のサウナ体験を。
-    </footer>
+  © 2025 Totonoi Match | 心ととのう、最高のサウナ体験を。|
+  <%= link_to "利用規約", terms_path, class: "text-decoration-none text-muted mx-2" %> |
+  <%= link_to "プライバシーポリシー", privacy_path, class: "text-decoration-none text-muted mx-2" %> |
+  <%= link_to 'お問い合わせ', new_contact_path, class: 'text-decoration-none text-muted mx-2' %>
+</footer>
   </body>
 </html>
