@@ -98,14 +98,20 @@ Rails.application.configure do
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
   config.hosts << "totonoi-match.onrender.com"
 
-  config.action_mailer.default_url_options = { host: "https://totonoi-match.onrender.com" }
+  config.action_mailer.default_url_options = {
+  host: "totonoi-match.onrender.com",
+  protocol: "https"
+}
+
 config.action_mailer.delivery_method = :smtp
+config.action_mailer.raise_delivery_errors = true  # 一旦 true にして原因を掴みやすくする
 config.action_mailer.smtp_settings = {
-  address:              'smtp.gmail.com',
+  address:              "smtp.gmail.com",
   port:                 587,
-  user_name:            ENV['GMAIL_USERNAME'],
-  password:             ENV['GMAIL_APP_PASSWORD'],
-  authentication:       'plain',
+  domain:               "gmail.com",
+  user_name:            ENV["GMAIL_USERNAME"],      # Gmail アドレス
+  password:             ENV["GMAIL_APP_PASSWORD"],  # アプリパスワード
+  authentication:       "plain",
   enable_starttls_auto: true
 }
 end
