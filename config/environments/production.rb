@@ -100,13 +100,15 @@ Rails.application.configure do
 
 
   config.action_mailer.default_url_options = { host: "https://totonoi-match.onrender.com" }
+
 config.action_mailer.delivery_method = :smtp
 config.action_mailer.smtp_settings = {
-  address:              'smtp.gmail.com',
+  address:              "smtp.sendgrid.net",
   port:                 587,
-  user_name:            ENV['GMAIL_USERNAME'],
-  password:             ENV['GMAIL_APP_PASSWORD'],
-  authentication:       'plain',
+  domain:               "totonoi-match.onrender.com",
+  user_name:            "apikey",                # ← これ固定
+  password:             ENV["SENDGRID_API_KEY"], # ← Render 環境変数
+  authentication:       :plain,
   enable_starttls_auto: true
 }
 end
