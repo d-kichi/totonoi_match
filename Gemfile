@@ -83,3 +83,6 @@ end
 # Bootstrap + Sass
 gem "bootstrap", "~> 5.3"
 gem "sassc-rails"
+
+gem "rails-i18n"
+gem "devise-i18n"

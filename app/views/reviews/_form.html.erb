@@ -1,0 +1,33 @@
+<%= form_with model: [sauna, review], local: true do |f| %>
+  <% if review.errors.any? %>
+    <div class="alert alert-danger">
+      <p class="mb-2">入力内容を確認してください。</p>
+      <ul class="mb-0">
+        <% review.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :rating, "星評価（1〜5）", class: "form-label d-block" %>
+
+    <div class="star-rating" aria-label="星評価">
+      <% 5.downto(1) do |i| %>
+        <%= f.radio_button :rating, i, id: "review_rating_#{i}", required: (i == 5) %>
+        <label for="review_rating_<%= i %>" title="<%= i %> / 5">★</label>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :comment, "本文（任意）", class: "form-label" %>
+    <%= f.text_area :comment, class: "form-control", rows: 4, placeholder: "よかった点・気になった点など（未入力OK）" %>
+  </div>
+
+  <div class="d-flex gap-2">
+    <%= f.submit "保存する", class: "btn btn-primary" %>
+    <%= link_to "キャンセル", mypage_path, class: "btn btn-outline-secondary" %>
+  </div>
+<% end %>

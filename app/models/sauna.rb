@@ -1,5 +1,6 @@
 class Sauna < ApplicationRecord
   belongs_to :sauna_type, optional: true
+  has_many :reviews, dependent: :destroy
 
   # ActiveAdmin / Ransack 用ホワイトリスト設定
   def self.ransackable_attributes(auth_object = nil)

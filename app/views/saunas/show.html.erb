@@ -1,0 +1,92 @@
+<h1 class="mb-3"><%= @sauna.name %></h1>
+
+<div class="card mb-4">
+  <div class="card-body">
+    <p class="mb-2"><strong>場所：</strong><%= @sauna.location %></p>
+
+    <p class="mb-2">
+      <strong>サウナ温度：</strong><%= @sauna.temperature %>℃
+      / <strong>水風呂：</strong><%= @sauna.water_temp %>℃
+    </p>
+
+    <p class="mb-2">
+      <strong>外気浴：</strong><%= @sauna.has_outdoor_bath ? "あり" : "なし" %>
+    </p>
+
+    <p class="mb-2">
+      <strong>営業時間：</strong>
+      <%= l(@sauna.open_time, format: :short) %> 〜 <%= l(@sauna.close_time, format: :short) %>
+    </p>
+
+    <p class="mb-0"><strong>説明：</strong><br><%= simple_format(@sauna.description) %></p>
+  </div>
+</div>
+
+<hr>
+
+<div class="d-flex align-items-center justify-content-between">
+  <h2 class="h4 mb-0">レビュー</h2>
+
+  <% if user_signed_in? %>
+    <%= link_to "レビューを書く", "#review-form", class: "btn btn-primary" %>
+  <% else %>
+    <%= link_to "ログインしてレビューを書く", new_user_session_path, class: "btn btn-outline-primary" %>
+  <% end %>
+</div>
+
+<%# レビュー一覧 %>
+<div class="mt-3">
+  <% if defined?(@reviews) && @reviews.present? %>
+    <div class="list-group">
+      <% @reviews.each do |review| %>
+        <div class="list-group-item">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <div class="fw-semibold">
+                <%# 星（1〜5） %>
+                <span aria-label="rating" title="評価：<%= review.rating %>">
+                  <%= "★" * review.rating.to_i %><%= "☆" * (5 - review.rating.to_i) %>
+                </span>
+              </div>
+
+              <% if review.comment.present? %>
+                <div class="mt-2"><%= simple_format(review.comment) %></div>
+              <% else %>
+                <div class="mt-2 text-muted">（本文なし）</div>
+              <% end %>
+            </div>
+
+            <small class="text-muted text-end">
+  <% if review.user.present? %>
+    <div>
+      <%= if review.user.username.present?
+            review.user.username
+          elsif review.user.respond_to?(:name) && review.user.name.present?
+            review.user.name
+          else
+            review.user.email
+          end %>
+    </div>
+  <% end %>
+  <div><%= l(review.created_at, format: :short) %></div>
+</small>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="text-muted mt-3">まだレビューがありません。最初のレビューを書いてみましょう。</p>
+  <% end %>
+</div>
+
+<%# 投稿フォーム %>
+<div id="review-form" class="mt-4">
+  <h3 class="h5">レビューを書く</h3>
+
+  <% if user_signed_in? %>
+    <%= render "reviews/form", sauna: @sauna, review: @review %>
+  <% else %>
+    <p class="text-muted">レビュー投稿にはログインが必要です。</p>
+    <%= link_to "ログインしてレビューを書く", new_user_session_path, class: "btn btn-outline-primary" %>
+  <% end %>
+</div>
