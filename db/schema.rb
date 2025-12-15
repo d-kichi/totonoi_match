@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_11_28_090507) do
+ActiveRecord::Schema[7.1].define(version: 2025_12_15_154241) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -87,6 +87,17 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_28_090507) do
     t.index ["sauna_type_id"], name: "index_results_on_sauna_type_id"
   end
 
+  create_table "reviews", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "sauna_id", null: false
+    t.integer "rating"
+    t.text "comment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["sauna_id"], name: "index_reviews_on_sauna_id"
+    t.index ["user_id"], name: "index_reviews_on_user_id"
+  end
+
   create_table "sauna_types", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -111,10 +122,25 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_28_090507) do
     t.index ["sauna_type_id"], name: "index_saunas_on_sauna_type_id"
   end
 
+  create_table "users", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "username"
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
   add_foreign_key "answers", "questions"
   add_foreign_key "diagnosis_answers", "answers"
   add_foreign_key "diagnosis_answers", "questions"
   add_foreign_key "diagnosis_answers", "results"
   add_foreign_key "results", "sauna_types"
+  add_foreign_key "reviews", "saunas"
+  add_foreign_key "reviews", "users"
   add_foreign_key "saunas", "sauna_types"
 end

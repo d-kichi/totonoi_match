@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  devise_for :users
   # ActiveAdmin
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
@@ -29,12 +30,20 @@ Rails.application.routes.draw do
   root "homes#index"
 
   # 診断データをリセットしてトップページに戻る
-get 'reset_diagnosis', to: 'diagnoses#reset', as: :reset_diagnosis
+  get 'reset_diagnosis', to: 'diagnoses#reset', as: :reset_diagnosis
 
-get 'terms', to: 'pages#terms'
-get 'privacy', to: 'pages#privacy'
+  get 'terms', to: 'pages#terms'
+  get 'privacy', to: 'pages#privacy'
   if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: "/letter_opener"
   end
+
+  resource :user, only: :show
+
+  resources :saunas, only: [:index, :show] do
+    resources :reviews, only: [:create, :edit, :update, :destroy]
+  end
+
+  resource :mypage, only: [:show], controller: "mypages"
 
 end

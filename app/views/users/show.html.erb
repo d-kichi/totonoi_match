@@ -1,0 +1,36 @@
+<h1 class="h4 mb-3">マイページ</h1>
+
+<div class="card mb-4">
+  <div class="card-body">
+    <div class="fw-semibold">
+      <%= @user.respond_to?(:name) && @user.name.present? ? @user.name : @user.email %>
+    </div>
+  </div>
+</div>
+
+<h2 class="h5 mb-2">自分のレビュー</h2>
+
+<% if @reviews.present? %>
+  <div class="list-group">
+    <% @reviews.each do |review| %>
+      <div class="list-group-item">
+        <div class="d-flex justify-content-between">
+          <div>
+            <div class="fw-semibold">
+              <%= link_to review.sauna.name, sauna_path(review.sauna) %>
+            </div>
+            <div>
+              <%= "★" * review.rating.to_i %><%= "☆" * (5 - review.rating.to_i) %>
+            </div>
+            <% if review.comment.present? %>
+              <div class="mt-2"><%= simple_format(review.comment) %></div>
+            <% end %>
+          </div>
+          <small class="text-muted"><%= l(review.created_at, format: :short) %></small>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% else %>
+  <p class="text-muted">まだレビューがありません。</p>
+<% end %>
