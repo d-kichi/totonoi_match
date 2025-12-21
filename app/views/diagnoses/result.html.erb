@@ -12,7 +12,32 @@
   <%= link_to 'おすすめサウナを見る', result_path(@result.id), class: 'btn btn-primary mt-3 px-4' %>
 </div>
 
+
 <hr class="my-5">
+
+<div class="card mb-4 p-4 shadow-sm">
+  <div class="d-flex align-items-center justify-content-between mb-2">
+    <h3 class="h5 mb-0">サウナタイプ一覧</h3>
+    <span class="text-muted small">全<%= @sauna_types&.size || 0 %>タイプ</span>
+  </div>
+  <p class="text-muted small mb-3">診断で使っているサウナタイプの一覧です（現在の結果は強調表示されます）。</p>
+
+  <% if defined?(@sauna_types) && @sauna_types.present? %>
+    <div class="list-group">
+      <% @sauna_types.each do |t| %>
+        <% active = (@result&.sauna_type_id == t.id) %>
+        <%= link_to sauna_type_path(t), class: "list-group-item list-group-item-action d-flex justify-content-between align-items-center #{active ? 'active' : ''}" do %>
+          <span class="fw-semibold"><%= t.name %></span>
+          <% if active %>
+            <span class="badge bg-light text-dark">あなたのタイプ</span>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="text-muted">サウナタイプがまだ登録されていません。</div>
+  <% end %>
+</div>
 
 <div class="share-section text-center">
   <h3>診断結果をシェアしよう！</h3>

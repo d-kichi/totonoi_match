@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  devise_for :users
+  devise_for :users, controllers: { omniauth_callbacks: "users/omniauth_callbacks" }
   # ActiveAdmin
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
@@ -42,7 +42,10 @@ Rails.application.routes.draw do
 
   resources :saunas, only: [:index, :show] do
     resources :reviews, only: [:create, :edit, :update, :destroy]
+    resource  :favorite, only: [:create, :destroy]
   end
+
+  resources :sauna_types, only: [:show]
 
   resource :mypage, only: [:show], controller: "mypages"
 

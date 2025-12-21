@@ -84,5 +84,11 @@ end
 gem "bootstrap", "~> 5.3"
 gem "sassc-rails"
 
+#日本語化
 gem "rails-i18n"
 gem "devise-i18n"
+
+#SNSログイン（Google認証）
+gem "omniauth"
+gem "omniauth-google-oauth2"
+gem "omniauth-rails_csrf_protection"

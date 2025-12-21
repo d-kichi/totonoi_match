@@ -21,6 +21,8 @@ services:
     environment:
       RAILS_ENV: development
       # DATABASE_URL: postgres://postgres:password@db:5432/postgres
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
 
 volumes:
   db-data:
