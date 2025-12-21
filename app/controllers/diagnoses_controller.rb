@@ -8,6 +8,7 @@ class DiagnosesController < ApplicationController
 
   def question
     @step = params[:step].to_i
+    session[:answers] ||= {}
     @questions = Question.order(:id)
     @question = @questions[@step - 1]
   end
