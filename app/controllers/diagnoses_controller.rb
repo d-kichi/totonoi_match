@@ -31,9 +31,12 @@ class DiagnosesController < ApplicationController
   def result
     service = DiagnosisService.new(session[:answers])
     result_data = service.call  # ここで返ってくるのは { sauna_type_id: 3 } のようなデータと想定
-  
+
     # sauna_type_idをキーにResultを取得
     @result = Result.find_by(sauna_type_id: result_data[:sauna_type_id])
+
+    # 診断結果ページでサウナタイプ一覧を表示するため
+    @sauna_types = SaunaType.order(:id)
   end
 
   def reset

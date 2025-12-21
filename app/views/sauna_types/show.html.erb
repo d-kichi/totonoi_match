@@ -1,0 +1,15 @@
+<div class="container" style="max-width: 720px;">
+  <h1 class="h4 mb-3"><%= @sauna_type.name %></h1>
+
+  <div class="card mb-4">
+    <div class="card-body">
+      <% if @sauna_type.description.present? %>
+        <p><%= simple_format(@sauna_type.description) %></p>
+      <% else %>
+        <p class="text-muted">このサウナタイプの説明は準備中です。</p>
+      <% end %>
+    </div>
+  </div>
+
+  <%= link_to "← 診断結果に戻る", result_diagnoses_path, class: "btn btn-outline-secondary" %>
+</div>

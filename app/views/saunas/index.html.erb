@@ -1,0 +1,25 @@
+<div class="container" style="max-width: 720px;">
+  <h1 class="h4 mb-3">サウナ一覧</h1>
+
+  <% if @saunas.present? %>
+    <div class="list-group">
+      <% @saunas.each do |sauna| %>
+        <%= link_to sauna_path(sauna), class: "list-group-item list-group-item-action" do %>
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <div class="fw-semibold"><%= sauna.name %></div>
+              <div class="text-muted small"><%= sauna.location %></div>
+            </div>
+            <small class="text-muted">
+              <%= sauna.temperature %>℃ / <%= sauna.water_temp %>℃
+            </small>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="card">
+      <div class="card-body text-muted">サウナがまだ登録されていません。</div>
+    </div>
+  <% end %>
+</div>

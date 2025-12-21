@@ -1,5 +1,26 @@
 <h1 class="mb-3"><%= @sauna.name %></h1>
 
+<% if user_signed_in? %>
+  <% favored = current_user.favorites.exists?(sauna: @sauna) %>
+
+  <% if favored %>
+    <%= button_to "お気に入り解除",
+      sauna_favorite_path(@sauna),
+      method: :delete,
+      data: { turbo_confirm: "お気に入りを解除しますか？" },
+      class: "btn btn-outline-danger mb-3" %>
+  <% else %>
+    <%= button_to "お気に入り",
+      sauna_favorite_path(@sauna),
+      method: :post,
+      class: "btn btn-outline-primary mb-3" %>
+  <% end %>
+<% else %>
+  <%= link_to "ログインしてお気に入り",
+    new_user_session_path,
+    class: "btn btn-outline-primary mb-3" %>
+<% end %>
+
 <div class="card mb-4">
   <div class="card-body">
     <p class="mb-2"><strong>場所：</strong><%= @sauna.location %></p>
