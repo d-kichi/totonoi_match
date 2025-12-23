@@ -17,13 +17,56 @@
   <% end %>
 <% else %>
   <%= link_to "ログインしてお気に入り",
-    new_user_session_path,
+    new_user_session_path(redirect_to: request.fullpath),
     class: "btn btn-outline-primary mb-3" %>
+<% end %>
+
+<% unless user_signed_in? %>
+  <div class="card my-3">
+    <div class="card-body d-flex justify-content-between align-items-center">
+      <div>
+        <div class="fw-semibold">会員登録するともっと便利</div>
+        <div class="text-muted small">お気に入り保存・レビュー投稿ができます</div>
+      </div>
+      <%= link_to "無料で会員登録", new_user_registration_path(redirect_to: request.fullpath), class: "btn btn-primary btn-sm" %>
+    </div>
+  </div>
 <% end %>
 
 <div class="card mb-4">
   <div class="card-body">
     <p class="mb-2"><strong>場所：</strong><%= @sauna.location %></p>
+    <hr>
+<h2 class="h4">アクセス</h2>
+
+<div class="ratio ratio-16x9 mb-2">
+  <% if @sauna.latitude.present? && @sauna.longitude.present? %>
+    <iframe
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+      src="https://www.google.com/maps?q=<%= @sauna.latitude %>,<%= @sauna.longitude %>&output=embed">
+    </iframe>
+  <% else %>
+    <iframe
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade"
+      src="https://www.google.com/maps?q=<%= ERB::Util.url_encode(@sauna.location) %>&output=embed">
+    </iframe>
+  <% end %>
+</div>
+
+<% query = if @sauna.latitude.present? && @sauna.longitude.present?
+             "#{@sauna.latitude},#{@sauna.longitude}"
+           else
+             @sauna.location.to_s
+           end %>
+
+<div>
+  <%= link_to "Googleマップで開く",
+              "https://www.google.com/maps/search/?api=1&query=#{ERB::Util.url_encode(query)}",
+              target: "_blank", rel: "noopener",
+              class: "btn btn-outline-primary btn-sm" %>
+</div>
 
     <p class="mb-2">
       <strong>サウナ温度：</strong><%= @sauna.temperature %>℃

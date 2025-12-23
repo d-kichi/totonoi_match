@@ -12,6 +12,20 @@
   <%= link_to 'おすすめサウナを見る', result_path(@result.id), class: 'btn btn-primary mt-3 px-4' %>
 </div>
 
+<% unless user_signed_in? %>
+  <div class="card my-4 border-primary">
+    <div class="card-body text-center">
+      <h3 class="h5 mb-2">もっと便利に使いませんか？</h3>
+      <p class="text-muted mb-3">
+        お気に入り保存・レビュー投稿で、診断結果を活用できます。
+      </p>
+      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+        <%= link_to "無料で会員登録", new_user_registration_path, class: "btn btn-primary" %>
+        <%= link_to "ログイン", new_user_session_path, class: "btn btn-outline-secondary" %>
+      </div>
+    </div>
+  </div>
+<% end %>
 
 <hr class="my-5">
 
