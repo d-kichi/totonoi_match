@@ -2,6 +2,12 @@ ActiveAdmin.register Sauna do
   permit_params :name, :location, :latitude, :longitude, :temperature, :water_temp,
                 :has_outdoor_bath, :open_time, :close_time, :description, :sauna_type_id
 
+  # Ransack 4.x では関連(filter)が未許可だと `reviews_id_eq` 等で 500 になるため、
+  # 自動生成される reviews のフィルタを無効化する。
+  remove_filter :reviews
+  remove_filter :favorites
+  remove_filter :favorited_by_users
+
   index do
     selectable_column
     id_column
