@@ -32,4 +32,11 @@ class ApplicationController < ActionController::Base
       !request.xhr? &&
       !request.fullpath.start_with?("/users/auth")
   end
+
+  def authenticate_admin_user!
+    authenticate_user!
+    return if current_user&.admin?
+
+    redirect_to root_path, alert: "権限がありません"
+  end
 end
