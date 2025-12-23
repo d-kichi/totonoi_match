@@ -2,6 +2,8 @@ class DiagnosisService
   STYLE_KEYS = %w[solo social].freeze
   VALUE_KEYS = %w[relax reset challenge creative].freeze
 
+  class DataInsufficientError < StandardError; end
+
   def initialize(answers)
     @answers = answers
     @style_score = Hash.new(0)
@@ -16,25 +18,22 @@ class DiagnosisService
     value = @value_score.max_by { |_, v| v }&.first
 
     sauna_type_name = sauna_type_name(style, value)
-    sauna_type = SaunaType.find_by(name: sauna_type_name)
-    result = Result.find_by(sauna_type: sauna_type)
+    raise DataInsufficientError, "診断データが不足しているため判定できません" if sauna_type_name.blank?
 
-    if result
-      result
-    else
-      Result.create!(
-        sauna_type: SaunaType.find_or_create_by!(name: "診断不能（データ不足）"),
-        headline: "診断結果が見つかりません",
-        body: "該当するタイプの詳細データがありません。",
-        recommendation_note: ""
-      )
-    end
+    sauna_type = SaunaType.find_by(name: sauna_type_name)
+    raise DataInsufficientError, "サウナタイプ（#{sauna_type_name}）が見つかりません" if sauna_type.blank?
+
+    result = Result.find_by(sauna_type: sauna_type)
+    raise DataInsufficientError, "診断結果（#{sauna_type_name}）が見つかりません" if result.blank?
+
+    result
   end
 
   private
 
   def calculate_scores
-    return [] if @answers.nil?
+    return if @answers.nil?
+
     @answers.each do |question_id, answer_id|
       answer = Answer.find(answer_id)
 
@@ -55,7 +54,7 @@ class DiagnosisService
     when ["social", "challenge"] then "ロウリュファイター"
     when ["social", "creative"]  then "スチームクリエイター"
     else
-      "診断不能（データ不足）"
+      nil
     end
   end
 end

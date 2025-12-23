@@ -3,7 +3,22 @@
   <% if @saunas.present? %>
     <% @saunas.each do |sauna| %>
       <div class="sauna-card">
-        <h4><%= sauna.name %></h4>
+        <div class="d-flex align-items-center gap-2 mb-2">
+          <h4 class="mb-0"><%= sauna.name %></h4>
+          <% if user_signed_in? %>
+            <% if @favorite_sauna_ids.include?(sauna.id) %>
+              <%= button_to "お気に入り解除",
+                            sauna_favorite_path(sauna_id: sauna.id),
+                            method: :delete,
+                            class: "btn btn-outline-secondary btn-sm" %>
+            <% else %>
+              <%= button_to "お気に入り",
+                            sauna_favorite_path(sauna_id: sauna.id),
+                            method: :post,
+                            class: "btn btn-primary btn-sm" %>
+            <% end %>
+          <% end %>
+        </div>
         <% if sauna.description.present? %>
           <p><%= sauna.description %></p>
         <% end %>
@@ -19,7 +34,24 @@
     <p>おすすめサウナ情報が見つかりませんでした。</p>
   <% end %>
 </div>
-
+<% unless user_signed_in? %>
+  <div class="card my-4 border-primary">
+    <div class="card-body text-center">
+      <h3 class="h5 mb-2">会員登録でお気に入り保存ができます</h3>
+      <p class="text-muted mb-3">
+        気になるサウナを保存して、あとで見返せるようにしましょう。
+      </p>
+      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+        <%= link_to "無料で会員登録",
+                    new_user_registration_path(redirect_to: request.fullpath),
+                    class: "btn btn-primary" %>
+        <%= link_to "ログイン",
+                    new_user_session_path(redirect_to: request.fullpath),
+                    class: "btn btn-outline-secondary" %>
+      </div>
+    </div>
+  </div>
+<% end %>
 <div class="text-center mt-4">
   <%= link_to 'サウナタイプ結果に戻る', result_diagnoses_path, class: 'btn btn-outline-primary' %>
 </div>

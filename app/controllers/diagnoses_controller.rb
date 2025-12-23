@@ -30,14 +30,15 @@ class DiagnosesController < ApplicationController
   end
 
   def result
-    service = DiagnosisService.new(session[:answers])
-    result_data = service.call  # ここで返ってくるのは { sauna_type_id: 3 } のようなデータと想定
+    session[:answers] ||= {}
 
-    # sauna_type_idをキーにResultを取得
-    @result = Result.find_by(sauna_type_id: result_data[:sauna_type_id])
+    # DiagnosisService は Result を返す（DBに「診断不能」タイプを作らない）
+    @result = DiagnosisService.new(session[:answers]).call
 
-    # 診断結果ページでサウナタイプ一覧を表示するため
-    @sauna_types = SaunaType.order(:id)
+    # 診断結果ページでサウナタイプ一覧を表示するため（visible運用なら visible=true のみ）
+    @sauna_types = SaunaType.where(visible: true).order(:id)
+  rescue DiagnosisService::DataInsufficientError => e
+    redirect_to root_path, alert: e.message
   end
 
   def reset
