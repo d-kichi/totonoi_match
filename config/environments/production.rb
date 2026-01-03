@@ -102,9 +102,10 @@ Rails.application.configure do
 
 
   # Mailer host for Devise reset password links etc.
-  # Use your custom domain via APP_HOST (set in Render env vars)
+  app_host = ENV["APP_HOST"].presence || "totonoi-match.com"
+
   config.action_mailer.default_url_options = {
-    host: ENV.fetch("APP_HOST"),
+    host: app_host,
     protocol: "https"
   }
 
