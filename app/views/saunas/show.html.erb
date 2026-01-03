@@ -35,7 +35,7 @@
 
 <div class="card mb-4">
   <div class="card-body">
-    <p class="mb-2"><strong>場所：</strong><%= @sauna.location %></p>
+    <p class="mb-2"><strong>場所：</strong><%= @sauna.address %></p>
     <hr>
 <h2 class="h4">アクセス</h2>
 
@@ -50,7 +50,7 @@
     <iframe
       loading="lazy"
       referrerpolicy="no-referrer-when-downgrade"
-      src="https://www.google.com/maps?q=<%= ERB::Util.url_encode(@sauna.location) %>&output=embed">
+      src="https://www.google.com/maps?q=<%= ERB::Util.url_encode(@sauna.address) %>&output=embed">
     </iframe>
   <% end %>
 </div>
@@ -58,7 +58,7 @@
 <% query = if @sauna.latitude.present? && @sauna.longitude.present?
              "#{@sauna.latitude},#{@sauna.longitude}"
            else
-             @sauna.location.to_s
+             @sauna.address.to_s
            end %>
 
 <div>
@@ -67,6 +67,12 @@
               target: "_blank", rel: "noopener",
               class: "btn btn-outline-primary btn-sm" %>
 </div>
+
+<% if @sauna.respond_to?(:website_url) && @sauna.website_url.present? %>
+  <div class="mt-2">
+    <%= link_to "公式サイト", @sauna.website_url, target: "_blank", rel: "noopener", class: "btn btn-outline-secondary btn-sm" %>
+  </div>
+<% end %>
 
     <p class="mb-2">
       <strong>サウナ温度：</strong><%= @sauna.temperature %>℃
@@ -77,10 +83,44 @@
       <strong>外気浴：</strong><%= @sauna.has_outdoor_bath ? "あり" : "なし" %>
     </p>
 
-    <p class="mb-2">
+    <div class="mb-2">
       <strong>営業時間：</strong>
-      <%= l(@sauna.open_time, format: :short) %> 〜 <%= l(@sauna.close_time, format: :short) %>
-    </p>
+      <% day_labels = %w[日 月 火 水 木 金 土] %>
+      <% hours = (@sauna.respond_to?(:sauna_opening_hours) ? @sauna.sauna_opening_hours : []).to_a.sort_by { |h| h.day_of_week.to_i } %>
+
+      <% if hours.present? %>
+        <div class="table-responsive mt-2">
+          <table class="table table-sm align-middle mb-0">
+            <tbody>
+              <% hours.each do |h| %>
+                <% dow = h.day_of_week.to_i %>
+                <% label = day_labels[dow] || dow.to_s %>
+                <% opens = h.opens_at %>
+                <% closes = h.closes_at %>
+                <% overnight = opens.present? && closes.present? && closes < opens %>
+                <tr>
+                  <th scope="row" class="text-nowrap" style="width: 4rem;"><%= label %></th>
+                  <td>
+                    <% if h.respond_to?(:closed) && h.closed %>
+                      <span class="text-muted">定休</span>
+                    <% elsif opens.present? && closes.present? %>
+                      <%= opens.strftime("%H:%M") %> 〜 <%= closes.strftime("%H:%M") %>
+                      <% if overnight %>
+                        <span class="text-muted small">（翌日）</span>
+                      <% end %>
+                    <% else %>
+                      <span class="text-muted">未設定</span>
+                    <% end %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <div class="text-muted mt-2">営業時間が未登録です。</div>
+      <% end %>
+    </div>
 
     <p class="mb-0"><strong>説明：</strong><br><%= simple_format(@sauna.description) %></p>
   </div>

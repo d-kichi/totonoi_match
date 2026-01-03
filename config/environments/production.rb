@@ -101,5 +101,37 @@ Rails.application.configure do
   config.hosts << "totonoi-match.onrender.com"
 
 
-  config.action_mailer.default_url_options = { host: "https://totonoi-match.onrender.com" }
+  # Mailer host for Devise reset password links etc.
+  # Use custom domain when available; fall back to the Render domain.
+  config.action_mailer.default_url_options = {
+    host: ENV.fetch("APP_HOST", "totonoi-match.com"),
+    protocol: "https"
+  }
+
+  # Delivery method (set your SMTP provider credentials via ENV in production)
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address: ENV.fetch("SMTP_ADDRESS", "smtp.postmarkapp.com"),
+    port: ENV.fetch("SMTP_PORT", 587).to_i,
+    user_name: ENV.fetch("SMTP_USERNAME", ""),
+    password: ENV.fetch("SMTP_PASSWORD", ""),
+    authentication: :plain,
+    enable_starttls_auto: true
+  }
+
+  config.action_mailer.default_url_options = { host: ENV.fetch("APP_HOST"), protocol: "https" }
+
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address: "smtp.gmail.com",
+    port: 587,
+    domain: "gmail.com",
+    user_name: ENV["MAILER_SENDER"],
+    password: ENV["MAILER_PASSWORD"],
+    authentication: "plain",
+    enable_starttls_auto: true
+}
+
+config.action_mailer.perform_deliveries = true
+config.action_mailer.raise_delivery_errors = true
 end

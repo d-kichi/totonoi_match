@@ -36,9 +36,7 @@ Rails.application.configure do
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
 
-  # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
-
+  # Raise in development so mail issues are visible
   config.action_mailer.perform_caching = false
 
   # Print deprecation notices to the Rails logger.
@@ -74,9 +72,24 @@ Rails.application.configure do
   # Raise error when a before_action's only/except options reference missing actions
   config.action_controller.raise_on_missing_callback_actions = true
 
-  config.action_mailer.delivery_method = :letter_opener
+  # Mailer (development)
+  # Use letter_opener_web so emails are viewable at /letter_opener
+  config.action_mailer.delivery_method = :letter_opener_web
   config.action_mailer.perform_deliveries = true
-  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.default_url_options = { host: "localhost", port: 3000, protocol: "http" }
+
+
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address: "smtp.gmail.com",
+    port: 587,
+    domain: "gmail.com",
+    user_name: ENV["MAILER_SENDER"],
+    password: ENV["MAILER_PASSWORD"],
+    authentication: "plain",
+    enable_starttls_auto: true
+  }
 
   config.hosts.clear  # 全部許可（開発用）
 end

@@ -33,10 +33,19 @@ class ApplicationController < ActionController::Base
       !request.fullpath.start_with?("/users/auth")
   end
 
-  def authenticate_admin_user!
+  # ActiveAdmin 用: 管理者のみ /admin に入れる
+  def authenticate_admin!
     authenticate_user!
-    return if current_user&.admin?
 
-    redirect_to root_path, alert: "権限がありません"
+    # admin カラムが無い環境差でも落ちないように保険
+    is_admin = current_user.respond_to?(:admin) ? current_user.admin : current_user&.admin?
+    return if is_admin
+
+    redirect_to root_path, alert: "管理者権限がありません"
+  end
+
+  # 互換: 旧メソッド名を呼んでいる箇所があっても落とさない
+  def authenticate_admin_user!
+    authenticate_admin!
   end
 end

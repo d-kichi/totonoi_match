@@ -22,8 +22,8 @@
         <% if sauna.description.present? %>
           <p><%= sauna.description %></p>
         <% end %>
-        <% if sauna.location.present? %>
-          <p>場所：<%= sauna.location %></p>
+        <% if sauna.address.present? %>
+          <p>場所：<%= sauna.address %></p>
         <% end %>
         <% if sauna.temperature.present? && sauna.water_temp.present? %>
           <p>サウナ温度：<%= sauna.temperature %>℃ ／ 水風呂：<%= sauna.water_temp %>℃</p>
