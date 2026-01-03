@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_12_23_164359) do
+ActiveRecord::Schema[7.1].define(version: 2025_12_28_085144) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -107,6 +107,17 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_23_164359) do
     t.index ["user_id"], name: "index_reviews_on_user_id"
   end
 
+  create_table "sauna_opening_hours", force: :cascade do |t|
+    t.bigint "sauna_id", null: false
+    t.integer "day_of_week"
+    t.time "opens_at"
+    t.time "closes_at"
+    t.boolean "closed"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["sauna_id"], name: "index_sauna_opening_hours_on_sauna_id"
+  end
+
   create_table "sauna_types", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -117,18 +128,17 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_23_164359) do
 
   create_table "saunas", force: :cascade do |t|
     t.string "name"
-    t.string "location"
+    t.string "address"
     t.float "latitude"
     t.float "longitude"
     t.integer "temperature"
     t.integer "water_temp"
     t.boolean "has_outdoor_bath"
-    t.time "open_time"
-    t.time "close_time"
     t.text "description"
     t.bigint "sauna_type_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "website_url"
     t.index ["sauna_type_id"], name: "index_saunas_on_sauna_type_id"
   end
 
@@ -157,5 +167,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_23_164359) do
   add_foreign_key "results", "sauna_types"
   add_foreign_key "reviews", "saunas"
   add_foreign_key "reviews", "users"
+  add_foreign_key "sauna_opening_hours", "saunas"
   add_foreign_key "saunas", "sauna_types"
 end

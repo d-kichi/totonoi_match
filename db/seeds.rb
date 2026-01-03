@@ -4,6 +4,7 @@ puts "🌿 Seeding start..."
 Answer.destroy_all
 Question.destroy_all
 Result.destroy_all
+SaunaOpeningHour.destroy_all
 Sauna.destroy_all
 SaunaType.destroy_all
 
@@ -157,58 +158,116 @@ end
 puts "🔥 Creating Sauna data..."
 
 saunas_data = [
-  { name: "サウナ東京", location: "東京都港区赤坂", temperature: 90, water_temp: 16, has_outdoor_bath: true,
-    open_time: "06:00", close_time: "23:00", description: "静けさと照明のバランスが極上。瞑想的な空間で内省できる。",
-    sauna_type_name: "サウナモンク" },
+  { name: "サウナ東京", address: "東京都港区赤坂", temperature: 90, water_temp: 16, has_outdoor_bath: true,
+    opens_at: "06:00", closes_at: "23:00", description: "静けさと照明のバランスが極上。瞑想的な空間で内省できる。",
+    sauna_type_name: "サウナモンク", website_url: nil },
 
-  { name: "タイムズ スパ・レスタ", location: "東京都豊島区東池袋", temperature: 92, water_temp: 15, has_outdoor_bath: true,
-    open_time: "11:30", close_time: "08:30", description: "都会のリセット空間。清潔で動線が整っており、整いやすい環境。",
-    sauna_type_name: "リセットマスター" },
+  { name: "タイムズ スパ・レスタ", address: "東京都豊島区東池袋", temperature: 92, water_temp: 15, has_outdoor_bath: true,
+    opens_at: "11:30", closes_at: "08:30", description: "都会のリセット空間。清潔で動線が整っており、整いやすい環境。",
+    sauna_type_name: "リセットマスター", website_url: nil },
 
-  { name: "渋谷SAUNAS", location: "東京都渋谷区桜丘町", temperature: 100, water_temp: 10, has_outdoor_bath: false,
-    open_time: "07:00", close_time: "23:00", description: "多様なサウナ室で限界突破。熱と冷のギャップを楽しむ挑戦型。",
-    sauna_type_name: "ヒートウォリアー" },
+  { name: "渋谷SAUNAS", address: "東京都渋谷区桜丘町", temperature: 100, water_temp: 10, has_outdoor_bath: false,
+    opens_at: "07:00", closes_at: "23:00", description: "多様なサウナ室で限界突破。熱と冷のギャップを楽しむ挑戦型。",
+    sauna_type_name: "ヒートウォリアー", website_url: nil },
 
-  { name: "黄金湯", location: "東京都墨田区太平", temperature: 94, water_temp: 14, has_outdoor_bath: true,
-    open_time: "06:00", close_time: "24:30", description: "アート・音楽・銭湯が融合。感性でととのう非日常空間。",
-    sauna_type_name: "ととのいアーティスト" },
+  { name: "黄金湯", address: "東京都墨田区太平", temperature: 94, water_temp: 14, has_outdoor_bath: true,
+    opens_at: "06:00", closes_at: "24:30", description: "アート・音楽・銭湯が融合。感性でととのう非日常空間。",
+    sauna_type_name: "ととのいアーティスト", website_url: nil },
 
-  { name: "SAUNA & co", location: "東京都台東区蔵前", temperature: 88, water_temp: 17, has_outdoor_bath: false,
-    open_time: "10:00", close_time: "23:00", description: "ナチュラルデザイン×会話空間。共感と癒しのソーシャルサウナ。",
-    sauna_type_name: "スチームメイト" },
+  { name: "SAUNA & co", address: "東京都台東区蔵前", temperature: 88, water_temp: 17, has_outdoor_bath: false,
+    opens_at: "10:00", closes_at: "23:00", description: "ナチュラルデザイン×会話空間。共感と癒しのソーシャルサウナ。",
+    sauna_type_name: "スチームメイト", website_url: nil },
 
-  { name: "サウナ&カプセル北欧", location: "東京都台東区上野", temperature: 98, water_temp: 13, has_outdoor_bath: false,
-    open_time: "24時間営業", close_time: nil, description: "大衆サウナの王道。仲間と“整う”体験を共有できる。",
-    sauna_type_name: "ワークバランサー" },
+  { name: "サウナ&カプセル北欧", address: "東京都台東区上野", temperature: 98, water_temp: 13, has_outdoor_bath: false,
+    opens_at: "24時間営業", closes_at: nil, description: "大衆サウナの王道。仲間と“整う”体験を共有できる。",
+    sauna_type_name: "ワークバランサー", website_url: nil },
 
-  { name: "HUBHUB御徒町", location: "東京都台東区上野", temperature: 102, water_temp: 11, has_outdoor_bath: false,
-    open_time: "10:00", close_time: "24:00", description: "貸切×高温×盛り上がる空気。仲間で挑戦するグループ向け。",
-    sauna_type_name: "ロウリュファイター" },
+  { name: "HUBHUB御徒町", address: "東京都台東区上野", temperature: 102, water_temp: 11, has_outdoor_bath: false,
+    opens_at: "10:00", closes_at: "24:00", description: "貸切×高温×盛り上がる空気。仲間で挑戦するグループ向け。",
+    sauna_type_name: "ロウリュファイター", website_url: nil },
 
-  { name: "KUDOCHI sauna", location: "東京都中央区銀座", temperature: 90, water_temp: 15, has_outdoor_bath: false,
-    open_time: "09:00", close_time: "23:00", description: "デザイン美×創造性。仲間と感性を共有する空間。",
-    sauna_type_name: "スチームクリエイター" }
+  { name: "KUDOCHI sauna", address: "東京都中央区銀座", temperature: 90, water_temp: 15, has_outdoor_bath: false,
+    opens_at: "09:00", closes_at: "23:00", description: "デザイン美×創造性。仲間と感性を共有する空間。",
+    sauna_type_name: "スチームクリエイター", website_url: nil }
 ]
+
+# Seeds内の営業時間文字列を time型に寄せる（B-2の曜日別テーブルに保存）
+normalize_time_str = lambda do |s|
+  return nil if s.nil?
+  str = s.to_s.strip
+  return nil if str.empty?
+
+  # "24:00" / "24:30" を time型で扱える形へ
+  return "00:00" if str == "24:00"
+  return "00:30" if str == "24:30"
+
+  str
+end
 
 saunas_data.each do |data|
   sauna_type = SaunaType.find_by(name: data[:sauna_type_name])
-  Sauna.create!(
+
+  sauna = Sauna.create!(
     name: data[:name],
-    location: data[:location],
+    address: data[:address],
     temperature: data[:temperature],
     water_temp: data[:water_temp],
     has_outdoor_bath: data[:has_outdoor_bath],
-    open_time: data[:open_time],
-    close_time: data[:close_time],
     description: data[:description],
-    sauna_type: sauna_type
+    sauna_type: sauna_type,
+    website_url: data[:website_url]
   )
+
+  # 24時間営業などの例外を吸収
+  opens_raw  = data[:opens_at]
+  closes_raw = data[:closes_at]
+
+  if opens_raw.to_s.include?("24時間")
+    opens_at  = "00:00"
+    closes_at = "23:59"
+  else
+    opens_at  = normalize_time_str.call(opens_raw)
+    closes_at = normalize_time_str.call(closes_raw)
+  end
+
+  # 曜日7件を同じ時間で作成（必要になったら個別に管理画面で編集する）
+  (0..6).each do |dow|
+    SaunaOpeningHour.create!(
+      sauna: sauna,
+      day_of_week: dow,
+      closed: false,
+      opens_at: opens_at,
+      closes_at: closes_at
+    )
+  end
 end
 
 puts "✅ Saunas created successfully!"
 
 puts "🌿 Results created successfully!"
-AdminUser.find_or_create_by!(email: 'admin@example.com') do |user|
-  user.password = 'password'
-  user.password_confirmation = 'password'
+# 管理画面ログインは User で統一（admin: true）
+admin_email    = ENV.fetch("ADMIN_EMAIL", "admin@example.com")
+admin_password = ENV.fetch("ADMIN_PASSWORD", "password123") # 本番は必ず変える
+
+admin = User.find_or_initialize_by(email: admin_email)
+
+# username が空の場合のみ、被らない username を採番する
+if admin.username.blank?
+  base = "admin"
+  candidate = base
+  suffix = 1
+  while User.where.not(id: admin.id).exists?(username: candidate)
+    suffix += 1
+    candidate = "#{base}#{suffix}"
+  end
+  admin.username = candidate
 end
+
+# 初回作成時のみパスワード投入（既存ユーザーのパスワードは変更しない）
+admin.password = admin_password if admin.new_record? || admin.encrypted_password.blank?
+
+# admin カラムがある場合のみ true にする（環境差で落ちない）
+admin.admin = true if admin.respond_to?(:admin)
+
+admin.save!
+puts "✅ Admin user ensured: #{admin.email} (username=#{admin.username})"
