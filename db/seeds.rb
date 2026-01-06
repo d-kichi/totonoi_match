@@ -1,15 +1,20 @@
 puts "🌿 Seeding start..."
 
 # --- 初期化 ---
-Answer.destroy_all
-Question.destroy_all
-Result.destroy_all
-SaunaOpeningHour.destroy_all
-Sauna.destroy_all
-SaunaType.destroy_all
+# seeds は「初期投入」用途。production で destroy_all すると運用データが消えるため禁止。
+if Rails.env.development? || Rails.env.test?
+  Answer.destroy_all
+  Question.destroy_all
+  Result.destroy_all
+  SaunaOpeningHour.destroy_all
+  Sauna.destroy_all
+  SaunaType.destroy_all
+else
+  puts "⚠️ #{Rails.env}: destroy_all is skipped (safe seed mode)"
+end
 
 # --- サウナタイプ（8タイプ） ---
-sauna_types = SaunaType.create!([
+sauna_types_data = [
   { name: 'サウナモンク', description: '静けさを極め、内なる自分と対話する求道者。' },
   { name: 'リセットマスター', description: '心身を整え、日常を再起動させる術師。' },
   { name: 'ヒートウォリアー', description: '熱と闘い、限界を突破する挑戦者。' },
@@ -18,9 +23,16 @@ sauna_types = SaunaType.create!([
   { name: 'ワークバランサー', description: '仕事とサウナで心身の調律を極める均衡者。' },
   { name: 'ロウリュファイター', description: '熱波に魂を燃やし、仲間を鼓舞する戦士。' },
   { name: 'スチームクリエイター', description: 'サウナの魅力を発信し、文化を広める伝道者。' }
-])
+]
 
-puts "✅ SaunaType created (#{sauna_types.count})"
+sauna_types = sauna_types_data.map do |attrs|
+  st = SaunaType.find_or_initialize_by(name: attrs[:name])
+  st.description = attrs[:description]
+  st.save!
+  st
+end
+
+puts "✅ SaunaType ensured (#{sauna_types.count})"
 
 # --- 質問・回答 ---
 questions = [
@@ -115,15 +127,14 @@ questions = [
 
 # --- 登録処理 ---
 questions.each do |q|
-  question = Question.create!(content: q[:content])
+  question = Question.find_or_create_by!(content: q[:content])
+
   q[:answers].each do |a|
-    Answer.create!(
-      content: a[:content],
-      question_id: question.id,
-      score: a[:score],
-      style_type: a[:style_type],
-      value_type: a[:value_type]
-    )
+    answer = Answer.find_or_initialize_by(question: question, content: a[:content])
+    answer.score = a[:score]
+    answer.style_type = a[:style_type]
+    answer.value_type = a[:value_type]
+    answer.save!
   end
 end
 
@@ -147,12 +158,13 @@ results_data = [
 
 results_data.each do |data|
   sauna_type = SaunaType.find_by(name: data[:sauna_type_name])
-  Result.create!(
-    sauna_type: sauna_type,
-    headline: data[:headline],
-    body: data[:body],
-    recommendation_note: data[:recommendation_note]
-  )
+  next unless sauna_type
+
+  result = Result.find_or_initialize_by(sauna_type: sauna_type)
+  result.headline = data[:headline]
+  result.body = data[:body]
+  result.recommendation_note = data[:recommendation_note]
+  result.save!
 end
 
 puts "🔥 Creating Sauna data..."
@@ -207,16 +219,15 @@ end
 saunas_data.each do |data|
   sauna_type = SaunaType.find_by(name: data[:sauna_type_name])
 
-  sauna = Sauna.create!(
-    name: data[:name],
-    address: data[:address],
-    temperature: data[:temperature],
-    water_temp: data[:water_temp],
-    has_outdoor_bath: data[:has_outdoor_bath],
-    description: data[:description],
-    sauna_type: sauna_type,
-    website_url: data[:website_url]
-  )
+  sauna = Sauna.find_or_initialize_by(name: data[:name])
+  sauna.address = data[:address]
+  sauna.temperature = data[:temperature]
+  sauna.water_temp = data[:water_temp]
+  sauna.has_outdoor_bath = data[:has_outdoor_bath]
+  sauna.description = data[:description]
+  sauna.sauna_type = sauna_type
+  sauna.website_url = data[:website_url]
+  sauna.save!
 
   # 24時間営業などの例外を吸収
   opens_raw  = data[:opens_at]
@@ -230,15 +241,25 @@ saunas_data.each do |data|
     closes_at = normalize_time_str.call(closes_raw)
   end
 
-  # 曜日7件を同じ時間で作成（必要になったら個別に管理画面で編集する）
+  # 曜日7件
   (0..6).each do |dow|
-    SaunaOpeningHour.create!(
-      sauna: sauna,
-      day_of_week: dow,
-      closed: false,
-      opens_at: opens_at,
-      closes_at: closes_at
-    )
+    oh = SaunaOpeningHour.find_or_initialize_by(sauna: sauna, day_of_week: dow)
+
+    if Rails.env.development? || Rails.env.test?
+      # 開発/テストは seed を正として上書き
+      oh.closed = false
+      oh.opens_at = opens_at
+      oh.closes_at = closes_at
+      oh.save!
+    else
+      # 本番は「無ければ作る」だけ（管理画面での編集を壊さない）
+      if oh.new_record?
+        oh.closed = false
+        oh.opens_at = opens_at
+        oh.closes_at = closes_at
+        oh.save!
+      end
+    end
   end
 end
 
