@@ -1,6 +1,13 @@
 <div class="container" style="max-width: 720px;">
   <h1 class="h4 mb-3"><%= @sauna_type.name %></h1>
 
+  <div class="text-center mb-4">
+    <%= image_tag sauna_character_image_path(@sauna_type),
+                  alt: "#{@sauna_type.name} のキャラクター",
+                  class: "img-fluid",
+                  loading: "lazy" %>
+  </div>
+
   <div class="card mb-4">
     <div class="card-body">
       <% if @sauna_type.description.present? %>

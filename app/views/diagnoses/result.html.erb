@@ -2,6 +2,14 @@
 
 <div class="card my-4 p-4 shadow-sm">
   <h3 class="text-center mb-3 text-primary"><%= @result.sauna_type.name %>🧖‍♂️</h3>
+
+  <div class="text-center mb-3">
+    <%= image_tag sauna_character_image_path(@result.sauna_type),
+                  alt: "#{@result.sauna_type.name} のキャラクター",
+                  class: "img-fluid",
+                  loading: "lazy" %>
+  </div>
+
   <p class="lead text-center"><%= @result.headline %></p>
   <hr>
   <p><%= simple_format(@result.body) %></p>
