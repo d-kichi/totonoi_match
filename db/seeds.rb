@@ -27,8 +27,26 @@ sauna_types_data = [
 
 sauna_types = sauna_types_data.map do |attrs|
   st = SaunaType.find_or_initialize_by(name: attrs[:name])
-  st.description = attrs[:description]
-  st.save!
+
+  if Rails.env.development? || Rails.env.test?
+    # 開発/テストは seed を正として上書き
+    st.description = attrs[:description]
+    st.save!
+  else
+    # 本番は「無ければ作る」＋「空欄だけ補完」（管理画面の編集を壊さない）
+    if st.new_record?
+      st.description = attrs[:description]
+      st.save!
+    else
+      if st.description.blank?
+        st.description = attrs[:description]
+        st.save!
+      else
+        puts "↪︎ production: SaunaType '#{st.name}' exists, skip update"
+      end
+    end
+  end
+
   st
 end
 
@@ -161,10 +179,43 @@ results_data.each do |data|
   next unless sauna_type
 
   result = Result.find_or_initialize_by(sauna_type: sauna_type)
-  result.headline = data[:headline]
-  result.body = data[:body]
-  result.recommendation_note = data[:recommendation_note]
-  result.save!
+
+  if Rails.env.development? || Rails.env.test?
+    # 開発/テストは seed を正として上書き
+    result.headline = data[:headline]
+    result.body = data[:body]
+    result.recommendation_note = data[:recommendation_note]
+    result.save!
+  else
+    # 本番は「無ければ作る」＋「空欄だけ補完」（管理画面の編集を壊さない）
+    if result.new_record?
+      result.headline = data[:headline]
+      result.body = data[:body]
+      result.recommendation_note = data[:recommendation_note]
+      result.save!
+    else
+      changed = false
+
+      if result.headline.blank?
+        result.headline = data[:headline]
+        changed = true
+      end
+      if result.body.blank?
+        result.body = data[:body]
+        changed = true
+      end
+      if result.recommendation_note.blank?
+        result.recommendation_note = data[:recommendation_note]
+        changed = true
+      end
+
+      if changed
+        result.save!
+      else
+        puts "↪︎ production: Result for '#{sauna_type.name}' exists, skip update"
+      end
+    end
+  end
 end
 
 puts "🔥 Creating Sauna data..."
@@ -220,14 +271,67 @@ saunas_data.each do |data|
   sauna_type = SaunaType.find_by(name: data[:sauna_type_name])
 
   sauna = Sauna.find_or_initialize_by(name: data[:name])
-  sauna.address = data[:address]
-  sauna.temperature = data[:temperature]
-  sauna.water_temp = data[:water_temp]
-  sauna.has_outdoor_bath = data[:has_outdoor_bath]
-  sauna.description = data[:description]
-  sauna.sauna_type = sauna_type
-  sauna.website_url = data[:website_url]
-  sauna.save!
+
+  if Rails.env.development? || Rails.env.test?
+    # 開発/テストは seed を正として上書き
+    sauna.address = data[:address]
+    sauna.temperature = data[:temperature]
+    sauna.water_temp = data[:water_temp]
+    sauna.has_outdoor_bath = data[:has_outdoor_bath]
+    sauna.description = data[:description]
+    sauna.sauna_type = sauna_type
+    sauna.website_url = data[:website_url]
+    sauna.save!
+  else
+    # 本番は「無ければ作る」＋「空欄だけ補完」（管理画面の編集を壊さない）
+    if sauna.new_record?
+      sauna.address = data[:address]
+      sauna.temperature = data[:temperature]
+      sauna.water_temp = data[:water_temp]
+      sauna.has_outdoor_bath = data[:has_outdoor_bath]
+      sauna.description = data[:description]
+      sauna.sauna_type = sauna_type
+      sauna.website_url = data[:website_url]
+      sauna.save!
+    else
+      changed = false
+
+      if sauna.address.blank?
+        sauna.address = data[:address]
+        changed = true
+      end
+      if sauna.temperature.blank?
+        sauna.temperature = data[:temperature]
+        changed = true
+      end
+      if sauna.water_temp.blank?
+        sauna.water_temp = data[:water_temp]
+        changed = true
+      end
+      if sauna.has_outdoor_bath.nil?
+        sauna.has_outdoor_bath = data[:has_outdoor_bath]
+        changed = true
+      end
+      if sauna.description.blank?
+        sauna.description = data[:description]
+        changed = true
+      end
+      if sauna.sauna_type.nil?
+        sauna.sauna_type = sauna_type
+        changed = true
+      end
+      if sauna.website_url.blank?
+        sauna.website_url = data[:website_url]
+        changed = true
+      end
+
+      if changed
+        sauna.save!
+      else
+        puts "↪︎ production: Sauna '#{sauna.name}' exists, skip update"
+      end
+    end
+  end
 
   # 24時間営業などの例外を吸収
   opens_raw  = data[:opens_at]
