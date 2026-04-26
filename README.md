@@ -2,6 +2,13 @@
 
 ---
 
+## アプリURL
+https://totonoi-match.com/
+
+## テスト用アカウント
+email: test@example.com  
+password: password
+
 ## サービス概要
 
 今日の気分に合わせて簡単な質問に答えるだけで、自分の今のサウナタイプがわかり、それに応じたおすすめサウナを提案するサービス。
